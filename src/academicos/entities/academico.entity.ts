@@ -20,7 +20,7 @@ export class Academico {
     })
     curp: string;
 
-    @Column('numeric',{
+    @Column('float',{
         default: 0
     })
     autosNo: number;
