@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Academico {
@@ -38,5 +38,15 @@ export class Academico {
         this.primerApellido = this.primerApellido.toUpperCase();
         this.segundoApellido = this.segundoApellido.toUpperCase();
         this.matricula = this.matricula.toUpperCase();
+    }
+
+    @BeforeUpdate()
+    checkDatosUpdate(){
+
+        this.nombre = this.nombre.toUpperCase();
+        this.primerApellido = this.primerApellido.toUpperCase();
+        this.segundoApellido = this.segundoApellido.toUpperCase();
+        this.matricula = this.matricula.toUpperCase();
+
     }
 }
