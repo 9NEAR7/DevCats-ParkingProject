@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateAcademicoDto } from './dto/create-academico.dto';
@@ -29,19 +29,25 @@ export class AcademicosService {
   }
 
   findAll() {
-    return `This action returns all academicos`;
+    return this.academicoRepository.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} academico`;
+  async findOne(id: string) {
+
+    const academico = await this.academicoRepository.findOneBy({id});
+    if(!academico)
+      throw new NotFoundException(`User with id ${id} not found`)
+    return academico;
   }
 
   update(id: number, updateAcademicoDto: UpdateAcademicoDto) {
     return `This action updates a #${id} academico`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} academico`;
+  async remove(id: string) {
+    const academico = await this.findOne(id);
+
+    await this.academicoRepository.remove(academico);
   }
 
 

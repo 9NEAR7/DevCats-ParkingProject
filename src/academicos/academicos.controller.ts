@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { AcademicosService } from './academicos.service';
 import { CreateAcademicoDto } from './dto/create-academico.dto';
 import { UpdateAcademicoDto } from './dto/update-academico.dto';
@@ -18,8 +18,8 @@ export class AcademicosController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.academicosService.findOne(+id);
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.academicosService.findOne(id);
   }
 
   @Patch(':id')
@@ -29,6 +29,6 @@ export class AcademicosController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.academicosService.remove(+id);
+    return this.academicosService.remove(id);
   }
 }

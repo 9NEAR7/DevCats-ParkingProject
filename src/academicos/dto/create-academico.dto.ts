@@ -17,7 +17,7 @@ export class CreateAcademicoDto {
 
     @IsString()
     @Length(1,18)
-    curp: string;
+    matricula: string;
 
     @IsInt()
     @IsPositive()

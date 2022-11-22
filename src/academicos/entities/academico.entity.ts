@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Academico {
 
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: string;
 
     @Column('text')
     nombre: string;
@@ -18,7 +18,7 @@ export class Academico {
     @Column('text',{
         unique: true
     })
-    curp: string;
+    matricula: string;
 
     @Column('float',{
         default: 0
@@ -31,4 +31,12 @@ export class Academico {
     fotoUrl: string;
 
 
+    
+    @BeforeInsert()
+    checkNombre(){
+        this.nombre = this.nombre.toUpperCase();
+        this.primerApellido = this.primerApellido.toUpperCase();
+        this.segundoApellido = this.segundoApellido.toUpperCase();
+        this.matricula = this.matricula.toUpperCase();
+    }
 }
