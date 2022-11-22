@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, Query } from '@nestjs/common';
+
 import { AcademicosService } from './academicos.service';
 import { CreateAcademicoDto } from './dto/create-academico.dto';
 import { UpdateAcademicoDto } from './dto/update-academico.dto';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Controller('academicos')
 export class AcademicosController {
@@ -13,8 +15,8 @@ export class AcademicosController {
   }
 
   @Get()
-  findAll() {
-    return this.academicosService.findAll();
+  findAll(@Query() paginationDto: PaginationDto) {
+    return this.academicosService.findAll(paginationDto);
   }
 
   @Get(':id')

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AcademicosModule } from './academicos/academicos.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { AcademicosModule } from './academicos/academicos.module';
       autoLoadEntities: true,
       synchronize: true
     }),
-    AcademicosModule
+    AcademicosModule,
+    CommonModule
   ],
   controllers: [AppController],
   providers: [AppService],

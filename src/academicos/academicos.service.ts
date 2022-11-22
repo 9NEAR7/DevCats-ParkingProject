@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { CreateAcademicoDto } from './dto/create-academico.dto';
 import { UpdateAcademicoDto } from './dto/update-academico.dto';
 import { Academico } from './entities/academico.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class AcademicosService {
@@ -28,8 +29,12 @@ export class AcademicosService {
     
   }
 
-  findAll() {
-    return this.academicoRepository.find({});
+  findAll(paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0} = paginationDto;
+    return this.academicoRepository.find({
+      take: limit,
+      skip:offset,
+    });
   }
 
   async findOne(id: string) {
