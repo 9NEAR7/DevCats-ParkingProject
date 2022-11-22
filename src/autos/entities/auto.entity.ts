@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Academico } from '../../academicos/entities/academico.entity';
 
 @Entity()
 export class Auto {
@@ -16,6 +17,12 @@ export class Auto {
 
     @Column()
     color: string;
+
+    @ManyToOne(
+        () => Academico,
+        (academico) => academico.autos
+    )
+    academico: Academico
 
 
 }
