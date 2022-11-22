@@ -54,8 +54,23 @@ export class AcademicosService {
     return academico;
   }
 
-  update(id: number, updateAcademicoDto: UpdateAcademicoDto) {
-    return `This action updates a #${id} academico`;
+  async update(id: string, updateAcademicoDto: UpdateAcademicoDto) {
+    
+    const academico = await this.academicoRepository.preload({
+      id: id,
+      ...updateAcademicoDto
+    });
+
+    if(!academico) throw new NotFoundException(`Usuario con id: ${id} not found`)
+
+    try {
+      await this.academicoRepository.save(academico);
+      return  academico; 
+      
+    } catch (error) {
+      this.handleDBExceptions(error);
+    }
+    
   }
 
   async remove(id: string) {

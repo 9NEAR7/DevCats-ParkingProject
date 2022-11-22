@@ -25,8 +25,8 @@ export class AcademicosController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAcademicoDto: UpdateAcademicoDto) {
-    return this.academicosService.update(+id, updateAcademicoDto);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateAcademicoDto: UpdateAcademicoDto) {
+    return this.academicosService.update(id, updateAcademicoDto);
   }
 
   @Delete(':id')
