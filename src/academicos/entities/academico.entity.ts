@@ -30,6 +30,8 @@ export class Academico {
     })
     fotoUrl: string;
 
+    
+
 
     
     @BeforeInsert()
