@@ -19,9 +19,9 @@ export class AcademicosController {
     return this.academicosService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.academicosService.findOne(id);
+  @Get(':term')
+  findOne(@Param('term') term: string) {
+    return this.academicosService.findOne(term);
   }
 
   @Patch(':id')

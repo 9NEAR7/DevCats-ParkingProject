@@ -5,6 +5,7 @@ import { CreateAcademicoDto } from './dto/create-academico.dto';
 import { UpdateAcademicoDto } from './dto/update-academico.dto';
 import { Academico } from './entities/academico.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
+import {validate as isUUID} from 'uuid';
 
 @Injectable()
 export class AcademicosService {
@@ -37,11 +38,19 @@ export class AcademicosService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(term: string) {
 
-    const academico = await this.academicoRepository.findOneBy({id});
+    let academico : Academico;
+
+    if(isUUID(term)){
+      academico = await this.academicoRepository.findOneBy({id: term})
+    }else{
+      academico = await this.academicoRepository.findOneBy({matricula: term})
+    }
+
+    //const academico = await this.academicoRepository.findOneBy({term});
     if(!academico)
-      throw new NotFoundException(`User with id ${id} not found`)
+      throw new NotFoundException(`User with id ${term} not found`)
     return academico;
   }
 
