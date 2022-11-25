@@ -1,11 +1,14 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, DeepPartial, Repository } from 'typeorm';
 import { CreateAcademicoDto } from './dto/create-academico.dto';
 import { UpdateAcademicoDto } from './dto/update-academico.dto';
 import { Academico } from './entities/academico.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import {validate as isUUID} from 'uuid';
+import { CreateAutoDto } from '../autos/dto/create-auto.dto';
+import { UpdateAutoDto } from 'src/autos/dto/update-auto.dto';
+import { Auto } from '../autos/entities/auto.entity';
 
 @Injectable()
 export class AcademicosService {
@@ -14,15 +17,37 @@ export class AcademicosService {
 
   constructor(
     @InjectRepository(Academico)
-    private readonly academicoRepository: Repository<Academico>
+    private readonly academicoRepository: Repository<Academico>,
+    @InjectRepository(Auto)
+    private readonly autoRepository: Repository<Auto>,
+    private readonly dataSource: DataSource,
   ){}
 
   async create(createAcademicoDto: CreateAcademicoDto) {
 
     try {
-      const academico = this.academicoRepository.create(createAcademicoDto);
-      await this.academicoRepository.save(academico);
+      let x : Academico = {
+        matricula: createAcademicoDto.matricula,
+        nombre: createAcademicoDto.nombre,
+        primerApellido: createAcademicoDto.primerApellido,
+        segundoApellido: createAcademicoDto.segundoApellido,
+        autosNo: createAcademicoDto.autosNo,
+        fotoUrl: createAcademicoDto.fotoUrl,
+        autos: createAcademicoDto.autos
+
+      }; 
+      //primero guardamos academico y obtenemos ID
+      const academico = this.academicoRepository.create(x);
+       let registro = await this.academicoRepository.save(academico);
+
+      //guardamos los autos del academico 
       return academico;
+      createAcademicoDto.autos.forEach(element => {
+        let auto: Auto = {
+            
+        }
+
+      });
       
     } catch (error) {
       this.handleDBExceptions(error);
@@ -55,21 +80,24 @@ export class AcademicosService {
   }
 
   async update(id: string, updateAcademicoDto: UpdateAcademicoDto) {
+
     
-    const academico = await this.academicoRepository.preload({
-      id: id,
-      ...updateAcademicoDto
-    });
+    
+    
+     const academico = await this.academicoRepository.preload({
+       id: id,
+       ...updateAcademicoDto
+     });
 
-    if(!academico) throw new NotFoundException(`Usuario con id: ${id} not found`)
+     if(!academico) throw new NotFoundException(`Usuario con id: ${id} not found`)
 
-    try {
-      await this.academicoRepository.save(academico);
-      return  academico; 
+     try {
+       await this.academicoRepository.save(academico);
+       return  academico; 
       
-    } catch (error) {
-      this.handleDBExceptions(error);
-    }
+     } catch (error) {
+       this.handleDBExceptions(error);
+     }
     
   }
 
