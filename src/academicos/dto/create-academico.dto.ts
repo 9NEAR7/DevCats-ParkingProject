@@ -32,9 +32,6 @@ export class CreateAcademicoDto {
 
 
     @IsArray()
-    @ArrayNotEmpty()
-    @ValidateNested({each: true})
-    @Type(() => Auto)
     @IsOptional()
     autos?: Auto[];
 

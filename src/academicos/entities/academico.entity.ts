@@ -34,29 +34,29 @@ export class Academico {
     @OneToMany(
         () => Auto,
         (auto) => auto.academico,
-        {cascade: true}
+        {cascade: true, eager: true}
     )
-    autos: Auto
+    autos: Auto[];
 
     
 
 
     
-    // @BeforeInsert()
-    // checkNombre(){
-    //     this.nombre = this.nombre.toUpperCase();
-    //     this.primerApellido = this.primerApellido.toUpperCase();
-    //     this.segundoApellido = this.segundoApellido.toUpperCase();
-    //     this.matricula = this.matricula.toUpperCase();
-    // }
+     @BeforeInsert()
+     checkNombre(){
+         this.nombre = this.nombre.toUpperCase();
+         this.primerApellido = this.primerApellido.toUpperCase();
+         this.segundoApellido = this.segundoApellido.toUpperCase();
+         this.matricula = this.matricula.toUpperCase();
+     }
 
-    // @BeforeUpdate()
-    // checkDatosUpdate(){
+     @BeforeUpdate()
+     checkDatosUpdate(){
 
-    //     this.nombre = this.nombre.toUpperCase();
-    //     this.primerApellido = this.primerApellido.toUpperCase();
-    //     this.segundoApellido = this.segundoApellido.toUpperCase();
-    //     this.matricula = this.matricula.toUpperCase();
+         this.nombre = this.nombre.toUpperCase();
+         this.primerApellido = this.primerApellido.toUpperCase();
+         this.segundoApellido = this.segundoApellido.toUpperCase();
+         this.matricula = this.matricula.toUpperCase();
 
-    // }
+     }
 }

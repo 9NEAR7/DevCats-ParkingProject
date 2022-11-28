@@ -6,8 +6,6 @@ import { UpdateAcademicoDto } from './dto/update-academico.dto';
 import { Academico } from './entities/academico.entity';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import {validate as isUUID} from 'uuid';
-import { CreateAutoDto } from '../autos/dto/create-auto.dto';
-import { UpdateAutoDto } from 'src/autos/dto/update-auto.dto';
 import { Auto } from '../autos/entities/auto.entity';
 
 @Injectable()
@@ -20,35 +18,25 @@ export class AcademicosService {
     private readonly academicoRepository: Repository<Academico>,
     @InjectRepository(Auto)
     private readonly autoRepository: Repository<Auto>,
+
     private readonly dataSource: DataSource,
+    
   ){}
 
   async create(createAcademicoDto: CreateAcademicoDto) {
 
     try {
-      let x : Academico = {
-        matricula: createAcademicoDto.matricula,
-        nombre: createAcademicoDto.nombre,
-        primerApellido: createAcademicoDto.primerApellido,
-        segundoApellido: createAcademicoDto.segundoApellido,
-        autosNo: createAcademicoDto.autosNo,
-        fotoUrl: createAcademicoDto.fotoUrl,
-        autos: createAcademicoDto.autos
-
-      }; 
+      const { autos = [], ...res } = createAcademicoDto;
       //primero guardamos academico y obtenemos ID
-      const academico = this.academicoRepository.create(x);
-       let registro = await this.academicoRepository.save(academico);
-
-      //guardamos los autos del academico 
-      return academico;
-      createAcademicoDto.autos.forEach(element => {
-        let auto: Auto = {
-            
-        }
-
+      const academico = this.academicoRepository.create({
+        ...res,
+        autos: autos.map((auto) => this.autoRepository.create({ ...auto })),
       });
-      
+
+      //guardamos los autos del academico
+      await this.academicoRepository.save(academico);
+
+      return {...academico, autos}
     } catch (error) {
       this.handleDBExceptions(error);
     }
@@ -60,6 +48,9 @@ export class AcademicosService {
     return this.academicoRepository.find({
       take: limit,
       skip:offset,
+      relations:{
+        autos: true
+      }
     });
   }
 
@@ -81,21 +72,41 @@ export class AcademicosService {
 
   async update(id: string, updateAcademicoDto: UpdateAcademicoDto) {
 
-    
+    const {autos, ...toUpdate}  = updateAcademicoDto;
     
     
      const academico = await this.academicoRepository.preload({
-       id: id,
-       ...updateAcademicoDto
+       id,
+       ...toUpdate
      });
 
      if(!academico) throw new NotFoundException(`Usuario con id: ${id} not found`)
 
+     //Create queryrunner 
+     const queryRunner = this.dataSource.createQueryRunner();
+     await queryRunner.connect();
+     await queryRunner.startTransaction();
+
      try {
-       await this.academicoRepository.save(academico);
+
+      if(autos){
+        await queryRunner.manager.delete(Auto, {academico: {id}});
+
+        academico.autos = autos.map(
+          auto => this.autoRepository.create(auto)
+        )
+      }else{
+
+      }
+
+      await queryRunner.manager.save(academico);
+      //  await this.academicoRepository.save(academico);
+      await queryRunner.commitTransaction();
+      await queryRunner.release();
        return  academico; 
       
      } catch (error) {
+      await queryRunner.rollbackTransaction();
        this.handleDBExceptions(error);
      }
     

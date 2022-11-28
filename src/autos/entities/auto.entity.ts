@@ -1,10 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Academico } from '../../academicos/entities/academico.entity';
 
 @Entity()
 export class Auto {
 
-    @PrimaryColumn('uuid')
+    @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column('text',{
@@ -18,11 +18,25 @@ export class Auto {
     @Column()
     color: string;
 
-    @ManyToOne(
-        () => Academico,
-        (academico) => academico.autos
+    @ManyToOne(() => Academico, (academico) => academico.autos
     )
-    academico: Academico
+    academico: Academico;
+
+
+     @BeforeInsert()
+     checkMatricula(){
+         this.matriculaAuto = this.matriculaAuto.toUpperCase();
+         this.marca = this.marca.toUpperCase();
+         this.color = this.color.toUpperCase();
+     }
+
+     @BeforeUpdate()
+     checkDatos(){
+        this.matriculaAuto = this.matriculaAuto.toUpperCase();
+        this.marca = this.marca.toUpperCase();
+        this.color = this.color.toUpperCase();
+    }
+     
 
 
 }
