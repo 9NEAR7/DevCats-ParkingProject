@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AcademicosModule } from './academicos/academicos.module';
 import { CommonModule } from './common/common.module';
+import { AutosModule } from './autos/autos.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { CommonModule } from './common/common.module';
       synchronize: true
     }),
     AcademicosModule,
-    CommonModule
+    CommonModule,
+    AutosModule
   ],
   controllers: [AppController],
   providers: [AppService],

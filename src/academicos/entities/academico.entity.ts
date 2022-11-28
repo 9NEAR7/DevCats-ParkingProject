@@ -1,4 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Auto } from '../../autos/entities/auto.entity';
 
 @Entity()
 export class Academico {
@@ -30,23 +31,32 @@ export class Academico {
     })
     fotoUrl: string;
 
+    @OneToMany(
+        () => Auto,
+        (auto) => auto.academico,
+        {cascade: true, eager: true}
+    )
+    autos: Auto[];
 
     
-    @BeforeInsert()
-    checkNombre(){
-        this.nombre = this.nombre.toUpperCase();
-        this.primerApellido = this.primerApellido.toUpperCase();
-        this.segundoApellido = this.segundoApellido.toUpperCase();
-        this.matricula = this.matricula.toUpperCase();
-    }
 
-    @BeforeUpdate()
-    checkDatosUpdate(){
 
-        this.nombre = this.nombre.toUpperCase();
-        this.primerApellido = this.primerApellido.toUpperCase();
-        this.segundoApellido = this.segundoApellido.toUpperCase();
-        this.matricula = this.matricula.toUpperCase();
+    
+     @BeforeInsert()
+     checkNombre(){
+         this.nombre = this.nombre.toUpperCase();
+         this.primerApellido = this.primerApellido.toUpperCase();
+         this.segundoApellido = this.segundoApellido.toUpperCase();
+         this.matricula = this.matricula.toUpperCase();
+     }
 
-    }
+     @BeforeUpdate()
+     checkDatosUpdate(){
+
+         this.nombre = this.nombre.toUpperCase();
+         this.primerApellido = this.primerApellido.toUpperCase();
+         this.segundoApellido = this.segundoApellido.toUpperCase();
+         this.matricula = this.matricula.toUpperCase();
+
+     }
 }

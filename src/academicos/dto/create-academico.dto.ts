@@ -1,4 +1,6 @@
-import { IsInt, IsNumber, IsOptional, IsPositive, IsString, Length } from "class-validator";
+import { Type } from "class-transformer";
+import { ArrayNotEmpty, IsArray, IsInt, IsNumber, IsObject, IsOptional, IsPositive, IsString, Length, ValidateNested } from "class-validator";
+import { Auto } from '../../autos/entities/auto.entity';
 
 
 export class CreateAcademicoDto {
@@ -27,6 +29,11 @@ export class CreateAcademicoDto {
     @IsString()
     @Length(1,100)
     fotoUrl: string;
+
+
+    @IsArray()
+    @IsOptional()
+    autos?: Auto[];
 
 
 }
