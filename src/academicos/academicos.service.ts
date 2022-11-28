@@ -114,7 +114,6 @@ export class AcademicosService {
 
   async remove(id: string) {
     const academico = await this.findOne(id);
-
     await this.academicoRepository.remove(academico);
   }
 

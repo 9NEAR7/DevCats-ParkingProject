@@ -18,7 +18,7 @@ export class Auto {
     @Column()
     color: string;
 
-    @ManyToOne(() => Academico, (academico) => academico.autos
+    @ManyToOne(() => Academico, (academico) => academico.autos,{onDelete: 'CASCADE'}
     )
     academico: Academico;
 
