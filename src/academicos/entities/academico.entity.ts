@@ -21,10 +21,6 @@ export class Academico {
     })
     matricula: string;
 
-    @Column('float',{
-        default: 0
-    })
-    autosNo: number;
 
     @Column('text', {
         unique: true

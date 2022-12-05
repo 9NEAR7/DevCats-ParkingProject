@@ -21,11 +21,6 @@ export class CreateAcademicoDto {
     @Length(1,18)
     matricula: string;
 
-    @IsInt()
-    @IsPositive()
-    @IsOptional()
-    autosNo?: number;
-
     @IsString()
     @Length(1,100)
     fotoUrl: string;
